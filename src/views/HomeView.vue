@@ -1,5 +1,54 @@
-<script setup></script>
+<script setup>
+import { ref } from "vue";
+import axios from "axios";
+const searchQuery = ref("");
+const queryTimeout = ref(null);
+const mapSearchResults = ref(null);
+
+axios.defaults.headers.post["Content-Type"] = "application/json;charset=utf-8";
+axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
+
+const getSearchResults = () => {
+  clearTimeout(queryTimeout.value);
+  queryTimeout.value = setTimeout(async () => {
+    if (searchQuery.value.trim() == "") {
+      mapSearchResults.value = null;
+    }
+    const result = await axios.get(
+      `https://api.tomtom.com/search/2/geocode/${searchQuery.value}.json?storeResult=false&view=Unified&key=Hlcw8e9bvza3e7XgsRa3By5qS01Ha6PQ`
+    );
+    mapSearchResults.value = result.data.results;
+    console.log(mapSearchResults.value);
+  }, 400);
+};
+</script>
 
 <template>
-  <main class=""></main>
+  <main class="container text-white">
+    <div class="pt-4 mb-8 relative">
+      <input
+        type="text"
+        v-model="searchQuery"
+        @input="getSearchResults"
+        placeholder="Search for city"
+        class="py-2 px-1 w-full bg-transparent border-b focus:border-w-secondary focus:outline-none focus:shadow-[0px_1px_0_0_#004E71]"
+      />
+      <ul
+        v-show="mapSearchResults"
+        class="absolute bg-w-secondary text-white w-full shadow-md py-2 px-1 top-[66px]"
+      >
+        <li
+          v-for="searchResult in mapSearchResults"
+          :key="searchResult.id"
+          class="py-2 cursor-pointer"
+        >
+          {{
+            searchResult.address.freeformAddress +
+            " " +
+            searchResult.address.country
+          }}
+        </li>
+      </ul>
+    </div>
+  </main>
 </template>
