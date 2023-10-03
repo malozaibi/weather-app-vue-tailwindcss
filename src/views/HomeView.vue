@@ -4,6 +4,7 @@ import axios from "axios";
 const searchQuery = ref("");
 const queryTimeout = ref(null);
 const mapSearchResults = ref(null);
+const searchError = ref(false);
 
 axios.defaults.headers.post["Content-Type"] = "application/json;charset=utf-8";
 axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
@@ -14,11 +15,15 @@ const getSearchResults = () => {
     if (searchQuery.value.trim() == "") {
       mapSearchResults.value = null;
     }
-    const result = await axios.get(
-      `https://api.tomtom.com/search/2/geocode/${searchQuery.value}.json?storeResult=false&view=Unified&key=Hlcw8e9bvza3e7XgsRa3By5qS01Ha6PQ`
-    );
-    mapSearchResults.value = result.data.results;
-    console.log(mapSearchResults.value);
+    try {
+      const result = await axios.get(
+        `https://api.tomtom.com/search/2/geocode/${searchQuery.value}.json?storeResult=false&view=Unified&key=Hlcw8e9bvza3e7XgsRa3By5qS01Ha6PQ`
+      );
+      mapSearchResults.value = result.data.results;
+      searchError.value = false;
+    } catch (error) {
+      searchError.value = true;
+    }
   }, 400);
 };
 </script>
@@ -37,17 +42,23 @@ const getSearchResults = () => {
         v-show="mapSearchResults"
         class="absolute bg-w-secondary text-white w-full shadow-md py-2 px-1 top-[66px]"
       >
-        <li
-          v-for="searchResult in mapSearchResults"
-          :key="searchResult.id"
-          class="py-2 cursor-pointer"
-        >
-          {{
-            searchResult.address.freeformAddress +
-            " " +
-            searchResult.address.country
-          }}
-        </li>
+        <p v-if="searchError">Sorry Something Went Wrong!</p>
+        <p v-else-if="!searchError && mapSearchResults.length == 0">
+          No Search Found
+        </p>
+        <template v-else>
+          <li
+            v-for="searchResult in mapSearchResults"
+            :key="searchResult.id"
+            class="py-2 cursor-pointer"
+          >
+            {{
+              searchResult.address.freeformAddress +
+              " " +
+              searchResult.address.country
+            }}
+          </li>
+        </template>
       </ul>
     </div>
   </main>
