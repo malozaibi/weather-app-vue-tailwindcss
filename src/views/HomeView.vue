@@ -16,7 +16,7 @@ const previewCity = (searchResult) => {
   router.push({
     name: "cityView",
     params: {
-      city: searchResult.address.municipality,
+      city: searchResult.address.countrySubdivisionName,
       country: searchResult.address.country,
     },
     query: {

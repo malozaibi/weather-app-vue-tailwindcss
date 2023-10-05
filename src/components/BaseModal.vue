@@ -1,3 +1,13 @@
+<script setup>
+defineProps({
+  modalActive: {
+    type: Boolean,
+    default: false,
+  },
+});
+defineEmits(["close-modal"]);
+</script>
+
 <template>
   <Teleport to="body">
     <Transition name="modal-outer">
@@ -23,16 +33,6 @@
     </Transition>
   </Teleport>
 </template>
-
-<script setup>
-defineProps({
-  modalActive: {
-    type: Boolean,
-    default: false,
-  },
-});
-defineEmits(["close-modal"]);
-</script>
 
 <style scoped>
 .modal-outer-enter-active,
