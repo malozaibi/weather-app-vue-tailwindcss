@@ -1,6 +1,6 @@
 <script setup>
 import axios from "axios";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
 const getWeatherData = async () => {
@@ -27,6 +27,16 @@ const getWeatherData = async () => {
 };
 const weatherData = (await getWeatherData()).data;
 console.log(route.params);
+
+const router = useRouter();
+const removeCity = () => {
+  const cities = JSON.parse(localStorage.getItem("savedCities"));
+  const updatedCities = cities.filter((city) => city.id !== route.query.id);
+  localStorage.setItem("savedCities", JSON.stringify(updatedCities));
+  router.push({
+    name: "home",
+  });
+};
 </script>
 
 <template>
@@ -71,6 +81,14 @@ console.log(route.params);
             {{ weatherData.daily.temperature_2m_min[i] }}&deg;
           </div>
         </div>
+      </div>
+      <div
+        v-if="route.query.id"
+        @click="removeCity"
+        class="flex gap-6 text-white hover:text-red-500 cursor-pointer duration-150 justify-center py-12"
+      >
+        <i class="fa-solid fa-trash"></i>
+        <p>Remove City</p>
       </div>
     </div>
   </div>
