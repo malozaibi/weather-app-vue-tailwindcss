@@ -11,7 +11,7 @@ defineProps({
   <div
     class="my-3 flex py-6 px-3 bg-w-secondary rounded-md shadow-md cursor-pointer"
   >
-    <div class="flex flex-col flex-1">
+    <div class="flex flex-col flex-1 gap-2">
       <h2 class="text-3xl">{{ city.city }}</h2>
       <h3>{{ city.country }}</h3>
     </div>
