@@ -1,6 +1,6 @@
 # weather-app
 
-This template should help get you started developing with Vue 3 in Vite.
+This is a project for learning. [YouTube Playlist](https://www.youtube.com/playlist?list=PL4cUxeGkcC9hfoy8vFQ5tbXO3vY0xhhUZ)
 
 ## Recommended IDE Setup
 
